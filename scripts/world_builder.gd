@@ -213,7 +213,7 @@ func spawn_vehicle() -> void:
 	var car_script=load("res://scripts/vehicle.gd")
 	vehicle=Node3D.new()
 	vehicle.name="PrototypeCar"
-	vehicle.position=Vector3(4,0.45,25)
+	vehicle.position=Vector3(3,0.45,24)
 	vehicle.set_script(car_script)
 	add_child(vehicle)
 
