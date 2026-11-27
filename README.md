@@ -29,7 +29,7 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - Landscape display setup and mobile renderer configuration.
 - Deterministic map layout for repeatable testing.
 
-## New: browser test prototype\n\nA separate `index.html` provides a playable original 2D coastal-city demo with Story and Sandbox selection, three checkpoint missions, touch buttons, vehicle mode, moving placeholder traffic and pedestrians, minimap, weather tint, night toggle, and saved mission progress. Open `index.html` in a modern browser to try it. It is an original fan-made prototype and does not include GTA VI assets or game code.\n\n## How to test
+## Build 0.1 status\n\n**Implemented, but not yet validated in a Godot runtime:** five story objectives and save/reward handling, sprint stamina, vehicle handbrake and reset hotkeys, plus touch brake/reset controls. The browser demo adds five objectives, collectibles, cash rewards, district HUD, simple collision checks, pause/restart/save, and responsive touch controls. Several items remain prototypes or roadmap work; see `TEST_BUILD_0.1.0.md`.\n\n## New: browser test prototype\n\nA separate `index.html` provides a playable original 2D coastal-city demo with Story and Sandbox selection, three checkpoint missions, touch buttons, vehicle mode, moving placeholder traffic and pedestrians, minimap, weather tint, night toggle, and saved mission progress. Open `index.html` in a modern browser to try it. It is an original fan-made prototype and does not include GTA VI assets or game code.\n\n## How to test
 
 1. Install Godot 4.x (mobile renderer recommended).
 2. Clone or download this repository and open the folder in Godot.
