@@ -56,6 +56,40 @@ jobs:
           echo "Exported Xcode project:"
           find build/ios -maxdepth 2 -type f | head -40
 
+      - name: Build unsigned iPad app with Xcode
+        run: |
+          set -euo pipefail
+          xcodebuild -list -project build/ios/Leonida.xcodeproj
+          xcodebuild \
+            -project build/ios/Leonida.xcodeproj \
+            -scheme Leonida \
+            -configuration Release \
+            -sdk iphoneos \
+            -destination 'generic/platform=iOS' \
+            -derivedDataPath build/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY='' \
+            build
+          APP_PATH="build/DerivedData/Build/Products/Release-iphoneos/Leonida.app"
+          test -d "$APP_PATH"
+          mkdir -p build/ipa/Payload
+          cp -R "$APP_PATH" build/ipa/Payload/
+          cd build/ipa
+          zip -qry ../Leonida-unsigned.ipa Payload
+          cd ../..
+          test -f build/Leonida-unsigned.ipa
+          echo "Created unsigned IPA:"
+          ls -lh build/Leonida-unsigned.ipa
+
+      - name: Upload unsigned IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: Leonida-Unsigned-IPA
+          path: build/Leonida-unsigned.ipa
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Upload iOS Xcode project
         uses: actions/upload-artifact@v4
         with:
