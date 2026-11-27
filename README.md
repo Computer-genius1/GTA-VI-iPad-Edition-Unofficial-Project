@@ -4,11 +4,11 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 
 ## Modes
 
-- **Story Mode:** an original, small mission sequence with objective text and a destination marker. Complete three introductory location missions in order.
+- **Story Mode:** an original, small mission sequence with objective text and a destination marker. Complete five original checkpoint missions in order, earn mission rewards, and save checkpoint progress.
 - **Sandbox Mode:** free roam with no active mission objectives.
 - The mode-selection menu appears when the prototype starts. Missions currently use simple reach-the-location objectives; this is a prototype, not a complete narrative campaign.
 
-## Development update — Beta-preparation features
+## Build 0.1 enhancement pass\n\n- Browser demo now has five original story destinations, mission reward cash, collectible tokens, district name HUD, checkpoint saving, restart and pause menu, sprint stamina, building-block collision, vehicle reset, brake control, and mobile brake/reset buttons.\n- Godot story missions expanded to five and now save mission index, wallet, and player checkpoint.\n- Godot player sprint now uses stamina. Vehicle gains a collider placeholder, handbrake, and reset hotkey (R); handbrake (H).\n- Browser demo is still a separate 2D prototype, not the Godot 3D build.\n\n## Development update — Beta-preparation features
 
 - Ambient loop-route traffic placeholders and strolling pedestrian placeholders.
 - Road crosswalks, street lamps, promenade planters and additional environmental props.
