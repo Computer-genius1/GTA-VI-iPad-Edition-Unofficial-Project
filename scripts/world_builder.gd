@@ -247,44 +247,65 @@ func create_touch_controls(layer: CanvasLayer) -> void:
 	var left_pad:=TouchScreenButton.new()
 	left_pad.name="TouchMoveForward"
 	left_pad.position=Vector2(90,570)
-	left_pad.texture=make_touch_texture(Color(0.18,0.22,0.28,0.55))
+	left_pad.texture=make_touch_texture(Color(0.18,0.22,0.28,0.65))
 	left_pad.action="move_forward"
 	layer.add_child(left_pad)
+	add_touch_label(layer,Vector2(90,570),"↑")
 	var right_pad:=TouchScreenButton.new()
 	right_pad.name="TouchMoveBack"
 	right_pad.position=Vector2(90,650)
-	right_pad.texture=make_touch_texture(Color(0.18,0.22,0.28,0.55))
+	right_pad.texture=make_touch_texture(Color(0.18,0.22,0.28,0.65))
 	right_pad.action="move_back"
 	layer.add_child(right_pad)
+	add_touch_label(layer,Vector2(90,650),"↓")
 	var side_pad:=TouchScreenButton.new()
 	side_pad.position=Vector2(18,610)
-	side_pad.texture=make_touch_texture(Color(0.18,0.22,0.28,0.55))
+	side_pad.texture=make_touch_texture(Color(0.18,0.22,0.28,0.65))
 	side_pad.action="move_left"
 	layer.add_child(side_pad)
+	add_touch_label(layer,Vector2(18,610),"←")
 	var side_pad2:=TouchScreenButton.new()
 	side_pad2.position=Vector2(162,610)
-	side_pad2.texture=make_touch_texture(Color(0.18,0.22,0.28,0.55))
+	side_pad2.texture=make_touch_texture(Color(0.18,0.22,0.28,0.65))
 	side_pad2.action="move_right"
 	layer.add_child(side_pad2)
+	add_touch_label(layer,Vector2(162,610),"→")
 	var sprint_button:=TouchScreenButton.new()
 	sprint_button.position=Vector2(1040,570)
 	sprint_button.texture=make_touch_texture(Color(0.12,0.34,0.22,0.65))
 	sprint_button.action="sprint"
 	layer.add_child(sprint_button)
+	add_touch_label(layer,Vector2(1040,570),"RUN")
 	var jump_button:=TouchScreenButton.new()
 	jump_button.position=Vector2(1150,620)
 	jump_button.texture=make_touch_texture(Color(0.3,0.25,0.13,0.65))
 	jump_button.action="jump"
 	layer.add_child(jump_button)
+	add_touch_label(layer,Vector2(1150,620),"JUMP")
 	var interact_button:=TouchScreenButton.new()
 	interact_button.position=Vector2(1150,520)
 	interact_button.texture=make_touch_texture(Color(0.28,0.18,0.34,0.65))
 	interact_button.action="interact"
 	layer.add_child(interact_button)
+	add_touch_label(layer,Vector2(1150,520),"E")
+
+func add_touch_label(layer: CanvasLayer, at: Vector2, label_text: String) -> void:
+	var label:=Label.new()
+	label.text=label_text
+	label.position=at+Vector2(0,34)
+	label.size=Vector2(96,28)
+	label.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	label.add_theme_font_size_override("font_size",18)
+	label.add_theme_color_override("font_color",Color(1,1,1,0.9))
+	layer.add_child(label)
 
 func make_touch_texture(color: Color) -> Texture2D:
 	var image:=Image.create(96,96,false,Image.FORMAT_RGBA8)
-	image.fill(color)
+	image.fill(Color(0,0,0,0))
+	for y in range(96):
+		for x in range(96):
+			if Vector2(x-48,y-48).length()<46:
+				image.set_pixel(x,y,color)
 	return ImageTexture.create_from_image(image)
 
 func _process(_delta: float) -> void:
