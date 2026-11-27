@@ -4,6 +4,9 @@
 *{box-sizing:border-box}html,body{margin:0;height:100%;overflow:hidden;background:#10161c;color:#f3f7fb;font-family:system-ui,-apple-system,Segoe UI,sans-serif;touch-action:none}canvas{display:block;width:100%;height:100%;background:#9ab7a5}#hud{position:absolute;inset:12px 12px auto;display:flex;gap:8px;align-items:flex-start;pointer-events:none;flex-wrap:wrap}.panel{background:#101820d9;border:1px solid #ffffff24;border-radius:14px;padding:10px 13px;backdrop-filter:blur(8px);box-shadow:0 6px 20px #0003}.panel strong{display:block;font-size:12px;color:#b8d6e8;letter-spacing:.08em;text-transform:uppercase}.panel span{font-size:14px}.right{margin-left:auto;text-align:right}#mission{min-width:200px;max-width:320px}#hint{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);text-align:center;max-width:85%;font-size:12px;opacity:.85;pointer-events:none}.controls{position:absolute;bottom:18px;left:14px;display:grid;grid-template-columns:repeat(3,56px);grid-template-rows:repeat(2,56px);gap:7px}.btn{border:1px solid #ffffff40;background:#101820bb;color:white;border-radius:16px;font-weight:700;font-size:19px;touch-action:none;user-select:none}.btn:active,.btn.down{background:#41a3d8bb}.action{position:absolute;bottom:22px;right:18px;display:flex;flex-direction:column;gap:8px}.action .btn{width:66px;height:54px;font-size:12px}.menu{position:absolute;inset:0;background:linear-gradient(135deg,#07121ddd,#102a36dd);display:flex;align-items:center;justify-content:center;padding:20px}.card{max-width:540px;width:100%;padding:28px;border:1px solid #ffffff22;border-radius:24px;background:#14212beF;box-shadow:0 20px 60px #0008}.card h1{margin:0 0 5px;font-size:clamp(24px,6vw,38px)}.muted{color:#b7c7d2}.choices{display:flex;gap:12px;margin:18px 0}.choices button,.menu button,.hudbutton{background:#2d8fc2;border:0;color:#fff;padding:13px 18px;border-radius:13px;font-weight:750;font-size:15px}.choices button{flex:1}.menu button.secondary{background:#2c3b47}.small{font-size:12px;line-height:1.5}.mobile-only{display:none}@media(max-width:800px){.mobile-only{display:block}#hint{bottom:150px}.controls{bottom:16px}.action{bottom:18px}}</style></head><body>
 <canvas id="game"></canvas>
 <div id="hud"><div class="panel"><strong>Leonida • Prototype</strong><span id="modeText">Mode: —</span></div><div class="panel" id="mission"><strong>Objective</strong><span id="objective">Select a mode to begin</span></div><div class="panel right"><strong>Vehicle / Status</strong><span id="status">On foot · 0 km/h</span></div></div>
+<div class="panel" id="wallet" style="position:absolute;left:12px;top:104px;pointer-events:none"><strong>Wallet</strong><span id="cash">$0</span></div>
+<div class="panel" id="district" style="position:absolute;left:12px;top:164px;pointer-events:none"><strong>District</strong><span id="districtName">Coastal Leonida</span></div>
+<div id="pause" class="menu" style="display:none"><div class="card"><h1>Paused</h1><p class="muted">Game paused · Progress autosaves</p><div class="choices"><button id="resume">Resume</button><button id="restart" class="secondary">Restart</button></div><button id="save" class="secondary">Save checkpoint</button></div></div>
 <div id="hint">Desktop: WASD · Shift sprint · E vehicle · Space jump · drag to look | Touch: pad + action buttons</div>
 <div class="controls mobile-only"><button class="btn" data-key="up" style="grid-column:2">▲</button><button class="btn" data-key="left" style="grid-column:1;grid-row:2">◀</button><button class="btn" data-key="down" style="grid-column:2;grid-row:2">▼</button><button class="btn" data-key="right" style="grid-column:3;grid-row:2">▶</button></div>
 <div class="action mobile-only"><button class="btn" data-key="sprint">SPRINT</button><button class="btn" data-key="jump">JUMP</button><button class="btn" data-key="interact">CAR / EXIT</button><button class="btn" data-key="weather">WEATHER</button></div>
@@ -41,4 +44,56 @@ function update(dt){if(!started)return;let steer=(keys.has('left')?-1:0)+(keys.h
 camera.x+=(player.x-camera.x)*Math.min(1,dt*5);camera.y+=(player.y-camera.y)*Math.min(1,dt*5);let d=activeMission();if(d&&Math.hypot(player.x-d.x,player.y-d.y)<45){missionIndex++;missionDone=Math.max(missionDone,missionIndex);localStorage.setItem('leonida_missions',missionDone);updateObjective()}}
 let prev=performance.now();function frame(now){let dt=Math.min((now-prev)/1000,.04);prev=now;update(dt);ctx.clearRect(0,0,W,H);drawCity();drawTraffic(dt);drawPed(dt);drawMarker();drawPlayer();drawMinimap();if(weather===1){ctx.fillStyle='#5c758c35';ctx.fillRect(0,0,W,H)}if(weather===2){ctx.fillStyle='#b8a66a20';ctx.fillRect(0,0,W,H)}if(night){ctx.fillStyle='#07112877';ctx.fillRect(0,0,W,H)}document.querySelector('#status').textContent=(player.inCar?'In car':'On foot')+' · '+Math.round(Math.abs(player.speed))+' km/h';requestAnimationFrame(frame)}requestAnimationFrame(frame);
 })();
+
+// Build 0.1 systems pass: pause, rewards, mission save, collectible pickups, respawn, expanded objectives.
+(()=> {
+ const $=id=>document.getElementById(id);
+ const baseText=$('objective').textContent;
+ const saveKey='leonida_build01_save';
+ let save=JSON.parse(localStorage.getItem(saveKey)||'{}');
+ let wallet=Number(save.cash||0), missionStage=Number(save.stage||0), paused=false, timeOfDay=0, stamina=100;
+ const missions=[
+  {x:450,y:120,name:'Coastal Welcome',desc:'Reach the beachfront promenade',reward:100},
+  {x:-420,y:-260,name:'Downtown Errand',desc:'Visit the downtown plaza',reward:150},
+  {x:650,y:-500,name:'Sunset Pier',desc:'Explore the pier lookout',reward:175},
+  {x:-620,y:300,name:'Neighborhood Visit',desc:'Check out the residential block',reward:200},
+  {x:280,y:-720,name:'Marina Run',desc:'Visit the marina overlook',reward:250}
+ ];
+ const pickups=[{x:-250,y:150},{x:180,y:280},{x:500,y:-80},{x:-500,y:-350},{x:700,y:350},{x:-120,y:-550}].map((p,i)=>({...p,id:i}));
+ let found=new Set(save.pickups||[]);
+ function persist(){localStorage.setItem(saveKey,JSON.stringify({cash:wallet,stage:missionStage,pickups:[...found],x:player.x,y:player.y,angle:player.angle,mode:mode}));}
+ function updateWallet(){$('cash').textContent='+wallet.toLocaleString();}
+ function objectiveRefresh(){const m=missions[missionStage];$('objective').textContent=mode==='story'?(m?m.desc+' · '+(missionStage+1)+'/'+missions.length:'All Build 0.1 missions complete! Free roam unlocked'):'Free roam · explore, collect and drive';}
+ $('resume').onclick=()=>{paused=false;$('pause').style.display='none';};
+ $('restart').onclick=()=>{player.x=-80;player.y=80;player.angle=0;player.speed=0;player.inCar=false;missionStage=0;wallet=0;found.clear();persist();updateWallet();objectiveRefresh();paused=false;$('pause').style.display='none';};
+ $('save').onclick=()=>{persist();$('save').textContent='Checkpoint saved ✓';setTimeout(()=> $('save').textContent='Save checkpoint',1600)};
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&started){paused=!paused;$('pause').style.display=paused?'flex':'none';keys.clear()}});
+ const storyBtn=$('story'), sandboxBtn=$('sandbox');
+ storyBtn.addEventListener('click',()=>{missionStage=Math.min(Number(save.stage||0),missions.length);objectiveRefresh();persist()});
+ sandboxBtn.addEventListener('click',()=>{objectiveRefresh();persist()});
+ const startOriginal=window.__leonidaStart;
+ function drawExtras(){
+  if(!started)return;
+  // District zones
+  let dName=player.y>420?'Beachfront':player.x<-350?'Westside':player.x>350?'Marina & East Coast':player.y<-300?'Downtown':'Central Leonida';
+  $('districtName').textContent=dName;
+  // Small pickup tokens are collectible by walking/driving nearby
+  pickups.forEach(p=>{if(found.has(p.id))return;let s=worldToScreen(p.x,p.y);ctx.save();ctx.fillStyle='#ffdb57';ctx.strokeStyle='#fff2aa';ctx.lineWidth=2;ctx.beginPath();ctx.arc(s.x,s.y,8,0,Math.PI*2);ctx.fill();ctx.stroke();ctx.restore();if(Math.hypot(player.x-p.x,player.y-p.y)<24){found.add(p.id);wallet+=25;updateWallet();persist()}});
+  // Mission completion confirmation and reward payout
+  let m=mode==='story'?missions[missionStage]:null;
+  if(m&&Math.hypot(player.x-m.x,player.y-m.y)<40){wallet+=m.reward;missionStage++;persist();updateWallet();objectiveRefresh();$('objective').textContent='Mission complete! ++m.reward+' · '+(missions[missionStage]?.desc||'Intro missions completed');}
+  // lightweight day cycle: sky tint overlay with gradual variation
+  timeOfDay=(timeOfDay+0.0004)%1;
+  let dim=Math.max(0,Math.sin(timeOfDay*Math.PI*2-.5))*0.35;
+  if(night)dim=Math.max(dim,.4);
+  if(dim>.03){ctx.fillStyle='rgba(9,19,48,'+Math.min(dim,.5)+')';ctx.fillRect(0,0,W,H)}
+  // stamina bar overlay (sprint drains/regenerates)
+  if(keys.has('sprint')&&!player.inCar&&keys.has('up'))stamina=Math.max(0,stamina-dt*28);else stamina=Math.min(100,stamina+dt*16);
+ }
+ const frameBefore=window.__leonidaFrame;
+ // Intercept the current animation frame by drawing extra features in a separate animation layer.
+ function extrasLoop(){if(started&&!paused){drawExtras();}requestAnimationFrame(extrasLoop)}requestAnimationFrame(extrasLoop);
+ const oldObjective=objectiveRefresh;objectiveRefresh();updateWallet();
+})();
+// Pause flag also stops controls; reset/saved progress system is separate from original story local save.
 </script></body></html>
