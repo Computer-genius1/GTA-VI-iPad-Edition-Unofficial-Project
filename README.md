@@ -2,6 +2,13 @@
 
 An open-source, original South-Florida-inspired city prototype targeting Apple Silicon iPads (M3 and newer). It is **not** GTA VI itself, not a Rockstar port, and does not contain Rockstar code, map files, models, textures, audio, or other proprietary assets.
 
+## Development update — Beta-preparation features
+
+- Ambient loop-route traffic placeholders and strolling pedestrian placeholders.
+- Road crosswalks, street lamps, promenade planters and additional environmental props.
+- Toggleable night ambience (**N**) and cloudy ambience (**V**) for visual testing.
+- Additional separate scripts for traffic and pedestrians.
+
 ## Test Build 0.1.0 — prototype feature set
 
 - Procedural city blockout with downtown towers, low-rise blocks, beach edge, ocean, promenade, pier, palms, street grid, sidewalks and boulevard median.
@@ -26,6 +33,8 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 ## Roadmap
 
 - Test/fix Godot parser and runtime issues; tune controls and mobile frame rate.
+- Replace primitive NPC/traffic with animated models, navigation and collision-aware behavior.
+- Implement real weather particles, wet road materials and proper time-of-day transitions.
 - Improve road markings, building variety, water/coast visuals, vegetation, props and material quality.
 - Add vehicle collision, more vehicle models, road traffic and pedestrians.
 - Expand map districts and transitions; add weather and time-of-day.
