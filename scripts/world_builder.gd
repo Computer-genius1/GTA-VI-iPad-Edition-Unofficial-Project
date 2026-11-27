@@ -90,8 +90,29 @@ func build_blocks() -> void:
 			var w := rng.randf_range(13, 19)
 			var d := rng.randf_range(13, 19)
 			var p := Vector3(x + rng.randf_range(-3,3), h/2, z + rng.randf_range(-3,3))
-			var building := box(self, p, Vector3(w,h,d), palette[rng.randi_range(0,palette.size()-1)])
-			# Simple roof details and rooftop equipment.
+			var facade_color: Color = palette[rng.randi_range(0,palette.size()-1)]
+			box(self, p, Vector3(w,h,d), facade_color)
+			# Solid building collision so the player cannot walk through structures.
+			var collider := StaticBody3D.new()
+			var collision := CollisionShape3D.new()
+			var collision_box := BoxShape3D.new()
+			collision_box.size = Vector3(w,h,d)
+			collision.shape = collision_box
+			collision.position = p
+			collider.add_child(collision)
+			add_child(collider)
+			# Facade window panels on street-facing sides, varied spacing and tint.
+			var floors := int(max(2, h / 3.8))
+			var rows := min(floors, 14)
+			var cols := 3
+			for row in range(rows):
+				for col in range(cols):
+					var wy := 2.2 + row * (h / max(rows,1))
+					var wx := p.x - w*0.32 + col*(w*0.32)
+				var wz := p.z + d*0.5 + 0.06
+				box(self, Vector3(wx, wy, wz), Vector3(1.25,1.65,0.12), Color(0.13,0.24,0.31))
+				box(self, Vector3(wx, wy, p.z - d*0.5 - 0.06), Vector3(1.25,1.65,0.12), Color(0.13,0.24,0.31))
+			# Rooftop parapets and equipment.
 			box(self, Vector3(p.x, h + 0.5, p.z), Vector3(w*0.55, 1.0, d*0.55), Color(0.38,0.4,0.4))
 			if rng.randf() > 0.5:
 				box(self, Vector3(p.x + 2, h + 1.5, p.z), Vector3(2,2,2), Color(0.45,0.47,0.46))
