@@ -29,7 +29,7 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - Landscape display setup and mobile renderer configuration.
 - Deterministic map layout for repeatable testing.
 
-## How to test
+## New: browser test prototype\n\nA separate `index.html` provides a playable original 2D coastal-city demo with Story and Sandbox selection, three checkpoint missions, touch buttons, vehicle mode, moving placeholder traffic and pedestrians, minimap, weather tint, night toggle, and saved mission progress. Open `index.html` in a modern browser to try it. It is an original fan-made prototype and does not include GTA VI assets or game code.\n\n## How to test
 
 1. Install Godot 4.x (mobile renderer recommended).
 2. Clone or download this repository and open the folder in Godot.
