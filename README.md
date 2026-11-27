@@ -8,7 +8,14 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - **Sandbox Mode:** free roam with no active mission objectives.
 - The mode-selection menu appears when the prototype starts. Missions currently use simple reach-the-location objectives; this is a prototype, not a complete narrative campaign.
 
-## Build 0.1 enhancement pass\n\n- Browser demo now has five original story destinations, mission reward cash, collectible tokens, district name HUD, checkpoint saving, restart and pause menu, sprint stamina, building-block collision, vehicle reset, brake control, and mobile brake/reset buttons.\n- Godot story missions expanded to five and now save mission index, wallet, and player checkpoint.\n- Godot player sprint now uses stamina. Vehicle gains a collider placeholder, handbrake, and reset hotkey (R); handbrake (H).\n- Browser demo is still a separate 2D prototype, not the Godot 3D build.\n\n## Development update — Beta-preparation features
+## Build 0.1 enhancement pass
+
+- Browser demo now has five original story destinations, mission reward cash, collectible tokens, district name HUD, checkpoint saving, restart and pause menu, sprint stamina, building-block collision, vehicle reset, brake control, and mobile brake/reset buttons.
+- Godot story missions expanded to five and now save mission index, wallet, and player checkpoint.
+- Godot player sprint now uses stamina. Vehicle gains a collider placeholder, handbrake, and reset hotkey (R); handbrake (H).
+- Browser demo is still a separate 2D prototype, not the Godot 3D build.
+
+## Development update — Beta-preparation features
 
 - Ambient loop-route traffic placeholders and strolling pedestrian placeholders.
 - Road crosswalks, street lamps, promenade planters and additional environmental props.
@@ -29,7 +36,15 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - Landscape display setup and mobile renderer configuration.
 - Deterministic map layout for repeatable testing.
 
-## Build 0.1 status\n\n**Implemented, but not yet validated in a Godot runtime:** five story objectives and save/reward handling, sprint stamina, vehicle handbrake and reset hotkeys, plus touch brake/reset controls. The browser demo adds five objectives, collectibles, cash rewards, district HUD, simple collision checks, pause/restart/save, and responsive touch controls. Several items remain prototypes or roadmap work; see `TEST_BUILD_0.1.0.md`.\n\n## New: browser test prototype\n\nA separate `index.html` provides a playable original 2D coastal-city demo with Story and Sandbox selection, three checkpoint missions, touch buttons, vehicle mode, moving placeholder traffic and pedestrians, minimap, weather tint, night toggle, and saved mission progress. Open `index.html` in a modern browser to try it. It is an original fan-made prototype and does not include GTA VI assets or game code.\n\n## How to test
+## Build 0.1 status
+
+**Implemented, but not yet validated in a Godot runtime:** five story objectives and save/reward handling, sprint stamina, vehicle handbrake and reset hotkeys, plus touch brake/reset controls. The browser demo adds five objectives, collectibles, cash rewards, district HUD, simple collision checks, pause/restart/save, and responsive touch controls. Several items remain prototypes or roadmap work; see `TEST_BUILD_0.1.0.md`.
+
+## New: browser test prototype
+
+A separate `index.html` provides a playable original 2D coastal-city demo with Story and Sandbox selection, three checkpoint missions, touch buttons, vehicle mode, moving placeholder traffic and pedestrians, minimap, weather tint, night toggle, and saved mission progress. Open `index.html` in a modern browser to try it. It is an original fan-made prototype and does not include GTA VI assets or game code.
+
+## How to test
 
 1. Install Godot 4.x (mobile renderer recommended).
 2. Clone or download this repository and open the folder in Godot.
