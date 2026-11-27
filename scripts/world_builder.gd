@@ -22,7 +22,7 @@ func setup_input() -> void:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
 			var ev := InputEventKey.new()
-			 ev.keycode = map[action]
+			ev.keycode = map[action]
 			InputMap.action_add_event(action, ev)
 
 func build_environment() -> void:
