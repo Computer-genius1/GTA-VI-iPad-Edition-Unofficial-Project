@@ -30,14 +30,19 @@ func _ready() -> void:
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventMouseMotion and Input.mouse_mode==Input.MOUSE_MODE_CAPTURED:
-		camera_yaw-=event.relative.x*mouse_sensitivity
-		camera_pitch=clamp(camera_pitch-event.relative.y*mouse_sensitivity,-0.7,0.45)
-		rotation.y=camera_yaw
-		camera_pivot.rotation.x=camera_pitch
+		apply_look(event.relative)
+	elif event is InputEventScreenDrag:
+		apply_look(event.relative*1.15)
 	if event is InputEventKey and event.pressed and event.keycode==KEY_ESCAPE:
 		Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseButton and event.pressed and event.button_index==MOUSE_BUTTON_LEFT and not OS.has_feature("mobile"):
 		Input.mouse_mode=Input.MOUSE_MODE_CAPTURED
+
+func apply_look(delta_look: Vector2) -> void:
+	camera_yaw-=delta_look.x*mouse_sensitivity
+	camera_pitch=clamp(camera_pitch-delta_look.y*mouse_sensitivity,-0.7,0.45)
+	rotation.y=camera_yaw
+	camera_pivot.rotation.x=camera_pitch
 
 func _physics_process(delta: float) -> void:
 	if driving:
