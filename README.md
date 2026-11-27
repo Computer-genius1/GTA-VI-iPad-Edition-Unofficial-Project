@@ -7,6 +7,8 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - Ambient loop-route traffic placeholders and strolling pedestrian placeholders.
 - Road crosswalks, street lamps, promenade planters and additional environmental props.
 - Toggleable night ambience (**N**) and cloudy ambience (**V**) for visual testing.
+- Night-only streetlamp illumination at selected intersections.
+- Original traffic-signal props added to selected downtown intersections.
 - Additional separate scripts for traffic and pedestrians.
 
 ## Test Build 0.1.0 — prototype feature set
