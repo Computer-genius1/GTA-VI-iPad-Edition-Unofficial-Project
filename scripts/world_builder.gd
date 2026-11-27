@@ -58,7 +58,7 @@ func create_environment() -> void:
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.ambient_light_energy = 0.7
-		environment_ref = env
+	environment_ref = env
 	env.ssr_enabled = true
 	env.ssao_enabled = true
 	we.environment = env
