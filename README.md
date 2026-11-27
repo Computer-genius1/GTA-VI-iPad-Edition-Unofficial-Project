@@ -52,6 +52,10 @@ The repository now focuses on the Godot native 3D prototype only. The separate b
 
 **Status:** source scaffold and feature implementation are committed, but this prototype has not yet been compiled or run in an installed Godot environment. It is not an installable iPad build yet. iPad deployment requires Godot's iOS export workflow and Xcode on a Mac, plus device testing.
 
+## iOS export
+
+Use the **iOS export project** workflow from the GitHub Actions tab (or wait for it to run after a project change). It exports an Xcode project artifact for 14 days. This is an unsigned Xcode project—not an IPA. Open it in Xcode on a Mac, replace the placeholder Apple Team ID in the export preset with your own Team ID, and configure signing/provisioning to build an installable app.
+
 ## Roadmap
 
 - Test/fix Godot parser and runtime issues; tune controls and mobile frame rate.
