@@ -8,29 +8,56 @@ on:
       - 'project.godot'
       - 'export_presets.cfg'
       - '.github/workflows/ios-export.yml'
+
 jobs:
   export:
     runs-on: macos-14
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Install Godot
-        run: brew install --cask godot
-      - name: Install export templates
+
+      - name: Install pinned Godot 4.7.2
         run: |
-          GODOT=$(which godot)
-          VERSION=$($GODOT --version | head -1 | sed -E "s/^([0-9]+\\.[0-9]+\\.[0-9]+).*/\\1/")
-          echo "Godot version: $VERSION"
-          mkdir -p "$HOME/Library/Application Support/Godot/export_templates"
-          curl -L "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}-stable_export_templates.tpz" -o templates.tpz
-          unzip -q templates.tpz -d templates
-          mkdir -p "$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable"
-          cp templates/templates/* "$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable/"
-      - name: Import and export iOS Xcode project
+          set -euo pipefail
+          VERSION="4.7.2"
+          curl --fail --location --retry 3 --retry-delay 2 \
+            "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}-stable_macos.universal.zip" \
+            --output godot.zip
+          unzip -q godot.zip -d godot-dist
+          GODOT="$(find godot-dist -type f -path '*/Contents/MacOS/Godot' -print -quit)"
+          test -n "$GODOT"
+          chmod +x "$GODOT"
+          echo "GODOT_BIN=$GODOT" >> "$GITHUB_ENV"
+          "$GODOT" --version
+
+      - name: Install matching iOS export templates
         run: |
-          godot --headless --editor --path . --quit
-          godot --headless --path . --export-release "iOS" build/ios
-      - name: Upload Xcode project artifact
+          set -euo pipefail
+          VERSION="4.7.2"
+          TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable"
+          mkdir -p "$TEMPLATE_DIR"
+          curl --fail --location --retry 3 --retry-delay 2 \
+            "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}-stable_export_templates.tpz" \
+            --output templates.tpz
+          mkdir -p templates-unpacked
+          unzip -q templates.tpz -d templates-unpacked
+          cp templates-unpacked/templates/* "$TEMPLATE_DIR/"
+          test -f "$TEMPLATE_DIR/ios.zip"
+
+      - name: Import project and export Xcode project
+        run: |
+          set -euo pipefail
+          "$GODOT_BIN" --headless --editor --path . --quit
+          mkdir -p build/ios
+          "$GODOT_BIN" --headless --path . --export-release "iOS" "build/ios/Leonida.xcodeproj"
+          test -d "build/ios/Leonida.xcodeproj"
+          echo "Exported Xcode project:"
+          find build/ios -maxdepth 2 -type f | head -40
+
+      - name: Upload iOS Xcode project
         uses: actions/upload-artifact@v4
         with:
           name: Leonida-iOS-Xcode-project
-          path: build/ios
+          path: build/ios/
+          if-no-files-found: error
+          retention-days: 14
