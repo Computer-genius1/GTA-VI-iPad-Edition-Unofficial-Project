@@ -51,7 +51,7 @@ jobs:
           set -euo pipefail
           "$GODOT_BIN" --headless --editor --path . --quit
           mkdir -p build/ios
-          "$GODOT_BIN" --headless --path . --export-release "iOS" "build/ios/Leonida.xcodeproj"
+          "$GODOT_BIN" --headless --path . --verbose --export-release "iOS" "build/ios/Leonida.xcodeproj"
           test -d "build/ios/Leonida.xcodeproj"
           echo "Exported Xcode project:"
           find build/ios -maxdepth 2 -type f | head -40
