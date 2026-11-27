@@ -23,6 +23,7 @@ func _ready() -> void:
 	create_city_blocks()
 	create_landmarks()
 	create_road_details()
+	create_traffic_signals()
 	create_district_props()
 	spawn_ambient_traffic()
 	spawn_pedestrians()
@@ -166,6 +167,15 @@ func create_lamp(at: Vector3, road_lamp := true) -> void:
 	m.material_override = material(Color(0.24,0.26,0.27),0.5,0.55)
 	add_child(m)
 	box(self,at+Vector3(0,height,0),Vector3(0.55,0.18,0.55),Color(0.92,0.82,0.56),0.3)
+	if road_lamp:
+		var glow := OmniLight3D.new()
+		glow.position = at + Vector3(0,height-0.15,0)
+		glow.light_color = Color(1.0,0.82,0.58)
+		glow.light_energy = 0.75
+		glow.omni_range = 9.0
+		glow.visible = night_mode
+		glow.add_to_group("night_lights")
+		add_child(glow)
 
 func create_palm(at: Vector3) -> void:
 	var trunk_mesh := CylinderMesh.new()
@@ -350,6 +360,27 @@ func create_road_details() -> void:
 		box(self,Vector3(x,0.35,-88),Vector3(4,0.7,2.5),Color(0.45,0.33,0.23))
 		box(self,Vector3(x,1.15,-88),Vector3(2.6,1.4,1.5),Color(0.12,0.38,0.19))
 
+func create_traffic_signals() -> void:
+	# Original stylized signal props at selected downtown intersections.
+	for z in [-60,0,60]:
+		for x in [-30,30]:
+			var post := box(self,Vector3(x,3.4,z),Vector3(0.22,6.8,0.22),Color(0.20,0.22,0.23))
+			post.position.x=x
+			box(self,Vector3(x+1.1,6.3,z),Vector3(2.3,0.55,0.45),Color(0.18,0.19,0.20))
+			for i in range(3):
+				var bulb := SphereMesh.new()
+				bulb.radius=0.16
+				bulb.height=0.32
+				var node := MeshInstance3D.new()
+				node.mesh=bulb
+				node.position=Vector3(x+0.35+i*0.55,6.3,z+0.27)
+				var m := material([Color(0.86,0.08,0.06),Color(0.95,0.60,0.05),Color(0.08,0.72,0.20)][i],0.35)
+				m.emission_enabled=true
+				m.emission=[Color(0.8,0.03,0.02),Color(0.8,0.42,0.02),Color(0.02,0.6,0.08)][i]
+				m.emission_energy_multiplier=0.35
+				node.material_override=m
+				add_child(node)
+
 func spawn_ambient_traffic() -> void:
 	var script_car=load("res://scripts/traffic_car.gd")
 	for lane_x in [-5.5,5.5]:
@@ -371,6 +402,8 @@ func spawn_pedestrians() -> void:
 
 func toggle_night() -> void:
 	night_mode=not night_mode
+	for light in get_tree().get_nodes_in_group("night_lights"):
+		light.visible=night_mode
 	if sun_ref:
 		sun_ref.light_energy=0.18 if night_mode else 1.15
 		sun_ref.rotation_degrees=Vector3(-8,-24,0) if night_mode else Vector3(-42,-24,0)
