@@ -82,24 +82,6 @@ func reset_vehicle() -> void:
 	steering=0.0
 	damage_level=0.0
 
-func build_collision() -> void:
-	var body:=StaticBody3D.new()
-	body.name="VehicleCollision"
-	var collision:=CollisionShape3D.new()
-	var shape:=BoxShape3D.new()
-	shape.size=Vector3(1.9,0.85,3.9)
-	collision.shape=shape
-	collision.position=Vector3(0,0.5,0)
-	body.add_child(collision)
-	add_child(body)
-
-func reset_vehicle() -> void:
-	global_position=spawn_position
-	rotation=Vector3.ZERO
-	speed=0.0
-	steering=0.0
-	damage_level=0.0
-
 func build_camera() -> void:
 	vehicle_camera=Camera3D.new()
 	vehicle_camera.position=Vector3(0,3.2,7.6)
