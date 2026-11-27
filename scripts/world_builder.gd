@@ -58,7 +58,7 @@ func create_environment() -> void:
 	env.sky = sky
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.ambient_light_energy = 0.7
-	env.tonemap_mode = Environment.TONE_MAP_FILMIC
+	env.tonemap_mode = Environment.TONE_MAP_REINHARDT
 	environment_ref = env
 	env.ssr_enabled = true
 	env.ssao_enabled = true
@@ -363,7 +363,7 @@ func create_mode_menu(layer: CanvasLayer) -> void:
 	mode_menu.size=Vector2(500,340)
 	layer.add_child(mode_menu)
 	var layout:=VBoxContainer.new()
-	layout.alignment=VERTICAL_ALIGNMENT_CENTER
+	layout.alignment=BoxContainer.ALIGNMENT_CENTER
 	layout.add_theme_constant_override("separation",18)
 	mode_menu.add_child(layout)
 	var heading:=Label.new()
