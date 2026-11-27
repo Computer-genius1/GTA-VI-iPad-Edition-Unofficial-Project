@@ -13,8 +13,10 @@ var spawn_position := Vector3.ZERO
 const PAINT := Color(0.72,0.12,0.08)
 
 func _ready() -> void:
+	spawn_position=global_position
 	build_car()
 	build_camera()
+	build_collision()
 
 func build_car() -> void:
 	add_box(Vector3(2.0,0.65,4.1),Vector3(0,0.35,0),PAINT)
@@ -80,6 +82,24 @@ func reset_vehicle() -> void:
 	steering=0.0
 	damage_level=0.0
 
+func build_collision() -> void:
+	var body:=StaticBody3D.new()
+	body.name="VehicleCollision"
+	var collision:=CollisionShape3D.new()
+	var shape:=BoxShape3D.new()
+	shape.size=Vector3(1.9,0.85,3.9)
+	collision.shape=shape
+	collision.position=Vector3(0,0.5,0)
+	body.add_child(collision)
+	add_child(body)
+
+func reset_vehicle() -> void:
+	global_position=spawn_position
+	rotation=Vector3.ZERO
+	speed=0.0
+	steering=0.0
+	damage_level=0.0
+
 func build_camera() -> void:
 	vehicle_camera=Camera3D.new()
 	vehicle_camera.position=Vector3(0,3.2,7.6)
@@ -106,9 +126,12 @@ func _physics_process(delta: float) -> void:
 	if not occupied:
 		speed=move_toward(speed,0,delta*5)
 		return
-	if Input.is_action_just_pressed("reset_vehicle"):\n\t\treset_vehicle()\n\tvar throttle:=Input.get_action_strength("move_forward")-Input.get_action_strength("move_back")
+	if Input.is_action_just_pressed("reset_vehicle"):
+		reset_vehicle()\n\tvar throttle:=Input.get_action_strength("move_forward")-Input.get_action_strength("move_back")
 	var steer_input:=Input.get_action_strength("move_left")-Input.get_action_strength("move_right")
-	if throttle>0:
+	if Input.is_action_pressed("handbrake"):
+		speed=move_toward(speed,0,brake_force*2.8*delta)
+	elif throttle>0:
 		speed=move_toward(speed,max_speed,acceleration*throttle*delta)
 	elif throttle<0:
 		speed=move_toward(speed,-max_speed*0.35,acceleration*0.65*delta)
