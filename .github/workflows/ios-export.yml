@@ -18,10 +18,10 @@ jobs:
       - name: Install export templates
         run: |
           GODOT=$(which godot)
-          VERSION=$($GODOT --version | head -1)
+          VERSION=$($GODOT --version | head -1 | sed -E "s/^([0-9]+\\.[0-9]+\\.[0-9]+).*/\\1/")
           echo "Godot version: $VERSION"
           mkdir -p "$HOME/Library/Application Support/Godot/export_templates"
-          curl -L "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}_export_templates.tpz" -o templates.tpz
+          curl -L "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}-stable_export_templates.tpz" -o templates.tpz
           unzip -q templates.tpz -d templates
           mkdir -p "$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable"
           cp templates/templates/* "$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable/"
