@@ -6,7 +6,7 @@ const GRID := 30
 const ROAD_WIDTH := 9.0
 var rng := RandomNumberGenerator.new()
 var player: CharacterBody3D
-var vehicle: Node3D
+var vehicle
 var status_label: Label
 
 func _ready() -> void:
