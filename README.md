@@ -8,6 +8,19 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - **Sandbox Mode:** free roam with no active mission objectives.
 - The mode-selection menu appears when the prototype starts. Missions currently use simple reach-the-location objectives; this is a prototype, not a complete narrative campaign.
 
+## Build 0.2 — Open World Update (browser prototype)
+
+- Wanted level with police pursuit agents that chase and can gradually disengage when wanted pressure falls.
+- In-game clock with a visual day/night tint; existing weather cycle remains available.
+- GPS toggle and a route guidance line to the current story destination.
+- Garage menu with cash purchases for upgrade progression and vehicle reset/repair.
+- Safehouse purchase ($500) and checkpoint saving.
+- Settings overlay with performance/quality preset toggles, GPS, night and weather controls. Presets are UI-level placeholders; render optimization still needs implementation.
+- HUD wanted stars and clock, with buttons for GPS, Garage, Settings and Safehouse.
+
+These systems are currently implemented in the browser prototype only and are not yet mirrored in the Godot 3D project.
+
+
 ## Build 0.1 enhancement pass
 
 - Browser demo now has five original story destinations, mission reward cash, collectible tokens, district name HUD, checkpoint saving, restart and pause menu, sprint stamina, building-block collision, vehicle reset, brake control, and mobile brake/reset buttons.
