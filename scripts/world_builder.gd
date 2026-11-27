@@ -127,9 +127,9 @@ func create_city_blocks() -> void:
 			for floor_i in range(min(4,int(height/4))):
 				for side_i in range(2):
 					var window_x := pos.x-width*0.26+side_i*width*0.52
-				var window_y := 2.2+floor_i*(height/5.0)
-				box(self,Vector3(window_x,window_y,pos.z+depth/2+0.08),Vector3(1.8,1.35,0.12),Color(0.14,0.26,0.34),0.35)
-				box(self,Vector3(window_x,window_y,pos.z-depth/2-0.08),Vector3(1.8,1.35,0.12),Color(0.14,0.26,0.34),0.35)
+					var window_y := 2.2+floor_i*(height/5.0)
+					box(self,Vector3(window_x,window_y,pos.z+depth/2+0.08),Vector3(1.8,1.35,0.12),Color(0.14,0.26,0.34),0.35)
+					box(self,Vector3(window_x,window_y,pos.z-depth/2-0.08),Vector3(1.8,1.35,0.12),Color(0.14,0.26,0.34),0.35)
 			box(self,Vector3(pos.x,height+0.35,pos.z),Vector3(width*0.58,0.7,depth*0.58),Color(0.38,0.40,0.40))
 			if height < 18:
 				box(self,Vector3(pos.x,2.6,pos.z+depth/2+0.6),Vector3(width*0.7,0.55,1.0),Color(0.9,0.33,0.23))
