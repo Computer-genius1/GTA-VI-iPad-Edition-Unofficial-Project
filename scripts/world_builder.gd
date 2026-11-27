@@ -8,6 +8,10 @@ var rng := RandomNumberGenerator.new()
 var player: CharacterBody3D
 var vehicle
 var status_label: Label
+var mission_label: Label
+var mission_manager: Node
+var mode_menu: Control
+var selected_mode := "sandbox"
 var environment_ref: Environment
 var sun_ref: DirectionalLight3D
 var night_mode := false
@@ -259,6 +263,17 @@ func create_hud() -> void:
 	hint.text="E: enter / exit vehicle   Space: jump"
 	layer.add_child(hint)
 	hint.position=Vector2(24,124)
+	mission_label=Label.new()
+	mission_label.text="Choose a mode to begin"
+	mission_label.position=Vector2(24,170)
+	mission_label.size=Vector2(420,90)
+	mission_label.add_theme_font_size_override("font_size",18)
+	layer.add_child(mission_label)
+	mission_manager=Node3D.new()
+	mission_manager.set_script(load("res://scripts/mission_manager.gd"))
+	add_child(mission_manager)
+	mission_manager.setup(player,vehicle,mission_label)
+	create_mode_menu(layer)
 	# Mobile controls are visible on touch devices and support simple virtual movement.
 	if OS.has_feature("mobile"):
 		create_touch_controls(layer)
@@ -327,6 +342,63 @@ func make_touch_texture(color: Color) -> Texture2D:
 			if Vector2(x-48,y-48).length()<46:
 				image.set_pixel(x,y,color)
 	return ImageTexture.create_from_image(image)
+
+func create_mode_menu(layer: CanvasLayer) -> void:
+	mode_menu=PanelContainer.new()
+	mode_menu.name="ModeSelection"
+	mode_menu.set_anchors_and_offsets_preset(Control.PRESET_CENTER)
+	mode_menu.position=Vector2(-250,-170)
+	mode_menu.size=Vector2(500,340)
+	layer.add_child(mode_menu)
+	var layout:=VBoxContainer.new()
+	layout.alignment=VERTICAL_ALIGNMENT_CENTER
+	layout.add_theme_constant_override("separation",18)
+	mode_menu.add_child(layout)
+	var heading:=Label.new()
+	heading.text="LEONIDA  •  SELECT MODE"
+	heading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	heading.add_theme_font_size_override("font_size",26)
+	layout.add_child(heading)
+	var subheading:=Label.new()
+	subheading.text="Choose how you want to explore"
+	subheading.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	layout.add_child(subheading)
+	var story_button:=Button.new()
+	story_button.text="STORY MODE  —  Play missions"
+	story_button.custom_minimum_size=Vector2(0,62)
+	story_button.pressed.connect(start_story_mode)
+	layout.add_child(story_button)
+	var sandbox_button:=Button.new()
+	sandbox_button.text="SANDBOX MODE  —  Free roam"
+	sandbox_button.custom_minimum_size=Vector2(0,62)
+	sandbox_button.pressed.connect(start_sandbox_mode)
+	layout.add_child(sandbox_button)
+	var disclaimer:=Label.new()
+	disclaimer.text="Story is an original prototype mission sequence."
+	disclaimer.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	layout.add_child(disclaimer)
+	if not OS.has_feature("mobile"):
+		Input.mouse_mode=Input.MOUSE_MODE_VISIBLE
+
+func start_story_mode() -> void:
+	selected_mode="story"
+	mode_menu.hide()
+	mission_manager.start_story()
+	if not OS.has_feature("mobile"):
+		Input.mouse_mode=Input.MOUSE_MODE_CAPTURED
+	if status_label:
+		status_label.text="Story Mode  •  complete objectives in order"
+
+func start_sandbox_mode() -> void:
+	selected_mode="sandbox"
+	mode_menu.hide()
+	mission_label.text="SANDBOX MODE  •  Free roam, no missions"
+	mission_manager.story_active=false
+	mission_manager.marker.visible=false
+	if not OS.has_feature("mobile"):
+		Input.mouse_mode=Input.MOUSE_MODE_CAPTURED
+	if status_label:
+		status_label.text="Sandbox  •  explore freely"
 
 func _process(_delta: float) -> void:
 	if Input.is_action_just_pressed("toggle_night"):
