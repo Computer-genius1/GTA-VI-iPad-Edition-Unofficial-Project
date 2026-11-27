@@ -2,6 +2,12 @@
 
 An open-source, original South-Florida-inspired city prototype targeting Apple Silicon iPads (M3 and newer). It is **not** GTA VI itself, not a Rockstar port, and does not contain Rockstar code, map files, models, textures, audio, or other proprietary assets.
 
+## Modes
+
+- **Story Mode:** an original, small mission sequence with objective text and a destination marker. Complete three introductory location missions in order.
+- **Sandbox Mode:** free roam with no active mission objectives.
+- The mode-selection menu appears when the prototype starts. Missions currently use simple reach-the-location objectives; this is a prototype, not a complete narrative campaign.
+
 ## Development update — Beta-preparation features
 
 - Ambient loop-route traffic placeholders and strolling pedestrian placeholders.
@@ -18,6 +24,7 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - Third-person player with acceleration/braking, sprint, jump, mouse-look and touch-drag camera.
 - First drivable placeholder car: acceleration, reverse, steering, brake/roll-off, enter/exit and chase camera.
 - On-screen HUD with current test build and interaction hints.
+- Story/Sandbox selection menu and three sequential location-based story missions.
 - Mobile touch buttons for forward/back/left/right, sprint, jump and enter/exit.
 - Landscape display setup and mobile renderer configuration.
 - Deterministic map layout for repeatable testing.
