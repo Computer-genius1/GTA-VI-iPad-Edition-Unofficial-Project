@@ -8,6 +8,10 @@ var rng := RandomNumberGenerator.new()
 var player: CharacterBody3D
 var vehicle
 var status_label: Label
+var environment_ref: Environment
+var sun_ref: DirectionalLight3D
+var night_mode := false
+var rain_mode := false
 
 func _ready() -> void:
 	rng.seed = 612026
@@ -18,12 +22,15 @@ func _ready() -> void:
 	create_roads()
 	create_city_blocks()
 	create_landmarks()
+	create_road_details()
+	spawn_ambient_traffic()
+	spawn_pedestrians()
 	spawn_player()
 	spawn_vehicle()
 	create_hud()
 
 func configure_inputs() -> void:
-	var actions := {"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D, "sprint": KEY_SHIFT, "jump": KEY_SPACE, "interact": KEY_E}
+	var actions := {"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D, "sprint": KEY_SHIFT, "jump": KEY_SPACE, "interact": KEY_E, "toggle_night": KEY_N, "toggle_weather": KEY_V}
 	for action in actions:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
@@ -46,6 +53,7 @@ func create_environment() -> void:
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
 	env.ambient_light_energy = 0.7
 	env.tonemap_mode = Environment.TONE_MAP_FILMIC
+	environment_ref = env
 	env.ssr_enabled = true
 	env.ssao_enabled = true
 	we.environment = env
@@ -55,6 +63,7 @@ func create_environment() -> void:
 	sun.light_energy = 1.15
 	sun.shadow_enabled = true
 	sun.shadow_bias = 0.04
+	sun_ref = sun
 	add_child(sun)
 
 func material(color: Color, rough := 0.8, metallic := 0.0) -> StandardMaterial3D:
@@ -309,6 +318,10 @@ func make_touch_texture(color: Color) -> Texture2D:
 	return ImageTexture.create_from_image(image)
 
 func _process(_delta: float) -> void:
+	if Input.is_action_just_pressed("toggle_night"):
+		toggle_night()
+	if Input.is_action_just_pressed("toggle_weather"):
+		toggle_weather()
 	if player and vehicle:
 		var near_car:=player.global_position.distance_to(vehicle.global_position)<5.0
 		if near_car and status_label:
@@ -322,3 +335,60 @@ func _process(_delta: float) -> void:
 					status_label.text="Driving  •  E exit  •  WASD steer"
 				else:
 					status_label.text="Explore  •  WASD move  •  Shift sprint"
+
+func create_road_details() -> void:
+	# Crosswalks and small street props at selected intersections.
+	for z in [-120,-60,0,60,120]:
+		for stripe in range(7):
+			box(self,Vector3(-15+stripe*4.5,0.15,z),Vector3(2.5,0.04,0.7),Color(0.88,0.87,0.82))
+	for x in [-90,-60,60,90]:
+		for z in [-45,45,105]:
+			create_lamp(Vector3(x,0,z),true)
+	# Small landscaped planters along the waterfront.
+	for x in range(-200,201,32):
+		box(self,Vector3(x,0.35,-88),Vector3(4,0.7,2.5),Color(0.45,0.33,0.23))
+		box(self,Vector3(x,1.15,-88),Vector3(2.6,1.4,1.5),Color(0.12,0.38,0.19))
+
+func spawn_ambient_traffic() -> void:
+	var script_car=load("res://scripts/traffic_car.gd")
+	for lane_x in [-5.5,5.5]:
+		for start_z in [-120,-40,55,145]:
+			var car:=Node3D.new()
+			car.set_script(script_car)
+			car.route=[Vector3(lane_x,0,start_z),Vector3(lane_x,0,start_z+45),Vector3(lane_x,0,start_z+90),Vector3(lane_x,0,start_z+135)]
+			car.cruise_speed=rng.randf_range(4.0,7.0)
+			add_child(car)
+
+func spawn_pedestrians() -> void:
+	var script_npc=load("res://scripts/pedestrian.gd")
+	for x in [-72,-36,36,72,108]:
+		var npc:=Node3D.new()
+		npc.set_script(script_npc)
+		npc.patrol_points=[Vector3(x,0,-91),Vector3(x+10,0,-91),Vector3(x+10,0,-86),Vector3(x,0,-86)]
+		npc.stroll_speed=rng.randf_range(0.7,1.25)
+		add_child(npc)
+
+func toggle_night() -> void:
+	night_mode=not night_mode
+	if sun_ref:
+		sun_ref.light_energy=0.18 if night_mode else 1.15
+		sun_ref.rotation_degrees=Vector3(-8,-24,0) if night_mode else Vector3(-42,-24,0)
+	if environment_ref:
+		environment_ref.ambient_light_energy=0.28 if night_mode else 0.7
+		environment_ref.background_color=Color(0.025,0.035,0.09) if night_mode else Color(0.45,0.7,0.9)
+		if environment_ref.sky and environment_ref.sky.sky_material is ProceduralSkyMaterial:
+			var sky_mat=environment_ref.sky.sky_material
+			sky_mat.sky_top_color=Color(0.025,0.04,0.12) if night_mode else Color(0.18,0.42,0.76)
+			sky_mat.sky_horizon_color=Color(0.08,0.11,0.2) if night_mode else Color(0.78,0.84,0.94)
+	if status_label:
+		status_label.text="Night mode on  •  press N for day" if night_mode else "Day mode  •  press N for night"
+
+func toggle_weather() -> void:
+	rain_mode=not rain_mode
+	if environment_ref:
+		environment_ref.ambient_light_energy=0.42 if rain_mode else (0.28 if night_mode else 0.7)
+		if environment_ref.sky and environment_ref.sky.sky_material is ProceduralSkyMaterial:
+			var sky_mat=environment_ref.sky.sky_material
+			sky_mat.sky_horizon_color=Color(0.42,0.48,0.55) if rain_mode else (Color(0.08,0.11,0.2) if night_mode else Color(0.78,0.84,0.94))
+	if status_label:
+		status_label.text="Cloudy/rain ambience  •  press V" if rain_mode else "Weather cleared  •  press V"
