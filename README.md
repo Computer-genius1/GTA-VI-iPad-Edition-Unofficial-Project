@@ -14,10 +14,8 @@ The repository now focuses on the Godot native 3D prototype only. The separate b
 
 ## Build 0.1 enhancement pass
 
-- Browser demo now has five original story destinations, mission reward cash, collectible tokens, district name HUD, checkpoint saving, restart and pause menu, sprint stamina, building-block collision, vehicle reset, brake control, and mobile brake/reset buttons.
 - Godot story missions expanded to five and now save mission index, wallet, and player checkpoint.
 - Godot player sprint now uses stamina. Vehicle gains a collider placeholder, handbrake, and reset hotkey (R); handbrake (H).
-- Browser demo is still a separate 2D prototype, not the Godot 3D build.
 
 ## Development update — Beta-preparation features
 
