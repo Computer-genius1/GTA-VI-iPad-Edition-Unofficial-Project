@@ -20,8 +20,9 @@ jobs:
         run: |
           set -euo pipefail
           VERSION="4.7.2"
+          RELEASE_TAG="${VERSION}-stable"
           curl --fail --location --retry 3 --retry-delay 2 \
-            "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}-stable_macos.universal.zip" \
+            "https://github.com/godotengine/godot/releases/download/${RELEASE_TAG}/Godot_v${VERSION}-stable_macos.universal.zip" \
             --output godot.zip
           unzip -q godot.zip -d godot-dist
           GODOT="$(find godot-dist -type f -path '*/Contents/MacOS/Godot' -print -quit)"
@@ -37,7 +38,7 @@ jobs:
           TEMPLATE_DIR="$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable"
           mkdir -p "$TEMPLATE_DIR"
           curl --fail --location --retry 3 --retry-delay 2 \
-            "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}-stable_export_templates.tpz" \
+            "https://github.com/godotengine/godot/releases/download/${RELEASE_TAG}/Godot_v${VERSION}-stable_export_templates.tpz" \
             --output templates.tpz
           mkdir -p templates-unpacked
           unzip -q templates.tpz -d templates-unpacked
