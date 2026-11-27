@@ -213,7 +213,7 @@ func spawn_vehicle() -> void:
 	var car_script=load("res://scripts/vehicle.gd")
 	vehicle=Node3D.new()
 	vehicle.name="PrototypeCar"
-	vehicle.position=Vector3(11,0.45,24)
+	vehicle.position=Vector3(4,0.45,25)
 	vehicle.set_script(car_script)
 	add_child(vehicle)
 
@@ -266,6 +266,21 @@ func create_touch_controls(layer: CanvasLayer) -> void:
 	side_pad2.texture=make_touch_texture(Color(0.18,0.22,0.28,0.55))
 	side_pad2.action="move_right"
 	layer.add_child(side_pad2)
+	var sprint_button:=TouchScreenButton.new()
+	sprint_button.position=Vector2(1040,570)
+	sprint_button.texture=make_touch_texture(Color(0.12,0.34,0.22,0.65))
+	sprint_button.action="sprint"
+	layer.add_child(sprint_button)
+	var jump_button:=TouchScreenButton.new()
+	jump_button.position=Vector2(1150,620)
+	jump_button.texture=make_touch_texture(Color(0.3,0.25,0.13,0.65))
+	jump_button.action="jump"
+	layer.add_child(jump_button)
+	var interact_button:=TouchScreenButton.new()
+	interact_button.position=Vector2(1150,520)
+	interact_button.texture=make_touch_texture(Color(0.28,0.18,0.34,0.65))
+	interact_button.action="interact"
+	layer.add_child(interact_button)
 
 func make_touch_texture(color: Color) -> Texture2D:
 	var image:=Image.create(96,96,false,Image.FORMAT_RGBA8)
