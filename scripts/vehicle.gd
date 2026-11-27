@@ -8,6 +8,8 @@ var max_speed := 24.0
 var acceleration := 12.0
 var brake_force := 20.0
 var vehicle_camera: Camera3D
+var damage_level := 0.0
+var spawn_position := Vector3.ZERO
 const PAINT := Color(0.72,0.12,0.08)
 
 func _ready() -> void:
@@ -60,6 +62,24 @@ func mat(color: Color,rough:=0.65,metallic:=0.0) -> StandardMaterial3D:
 	m.metallic=metallic
 	return m
 
+func build_collision() -> void:
+	var body:=StaticBody3D.new()
+	body.name="VehicleCollision"
+	var collision:=CollisionShape3D.new()
+	var shape:=BoxShape3D.new()
+	shape.size=Vector3(1.9,0.85,3.9)
+	collision.shape=shape
+	collision.position=Vector3(0,0.5,0)
+	body.add_child(collision)
+	add_child(body)
+
+func reset_vehicle() -> void:
+	global_position=spawn_position
+	rotation=Vector3.ZERO
+	speed=0.0
+	steering=0.0
+	damage_level=0.0
+
 func build_camera() -> void:
 	vehicle_camera=Camera3D.new()
 	vehicle_camera.position=Vector3(0,3.2,7.6)
@@ -86,7 +106,7 @@ func _physics_process(delta: float) -> void:
 	if not occupied:
 		speed=move_toward(speed,0,delta*5)
 		return
-	var throttle:=Input.get_action_strength("move_forward")-Input.get_action_strength("move_back")
+	if Input.is_action_just_pressed("reset_vehicle"):\n\t\treset_vehicle()\n\tvar throttle:=Input.get_action_strength("move_forward")-Input.get_action_strength("move_back")
 	var steer_input:=Input.get_action_strength("move_left")-Input.get_action_strength("move_right")
 	if throttle>0:
 		speed=move_toward(speed,max_speed,acceleration*throttle*delta)
