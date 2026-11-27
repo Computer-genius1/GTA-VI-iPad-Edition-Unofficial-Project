@@ -12,6 +12,9 @@ var camera_pitch := -0.12
 var camera: Camera3D
 var camera_pivot: Node3D
 var driving := false
+var stamina := 100.0
+var stamina_recovery := 18.0
+var sprint_drain := 26.0
 
 func _ready() -> void:
 	camera_pivot=Node3D.new()
@@ -52,7 +55,12 @@ func _physics_process(delta: float) -> void:
 	if input_vector.length()>1.0:
 		input_vector=input_vector.normalized()
 	var move_direction:=Vector3(input_vector.x,0,input_vector.y).rotated(Vector3.UP,camera_yaw)
-	var speed:=sprint_speed if Input.is_action_pressed("sprint") else walk_speed
+	var sprinting:=Input.is_action_pressed("sprint") and stamina>1.0 and input_vector.length()>0.1
+	if sprinting:
+		stamina=max(0.0,stamina-sprint_drain*delta)
+	else:
+		stamina=min(100.0,stamina+stamina_recovery*delta)
+	var speed:=sprint_speed if sprinting else walk_speed
 	var target_velocity:=move_direction*speed
 	var rate:=acceleration if input_vector.length()>0.05 else braking
 	velocity.x=move_toward(velocity.x,target_velocity.x,rate*delta)
