@@ -1,0 +1,36 @@
+name: iOS export project
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**.gd'
+      - '**.tscn'
+      - 'project.godot'
+      - 'export_presets.cfg'
+      - '.github/workflows/ios-export.yml'
+jobs:
+  export:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Godot
+        run: brew install --cask godot
+      - name: Install export templates
+        run: |
+          GODOT=$(which godot)
+          VERSION=$($GODOT --version | head -1)
+          echo "Godot version: $VERSION"
+          mkdir -p "$HOME/Library/Application Support/Godot/export_templates"
+          curl -L "https://github.com/godotengine/godot/releases/download/${VERSION}/Godot_v${VERSION}_export_templates.tpz" -o templates.tpz
+          unzip -q templates.tpz -d templates
+          mkdir -p "$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable"
+          cp templates/templates/* "$HOME/Library/Application Support/Godot/export_templates/${VERSION}.stable/"
+      - name: Import and export iOS Xcode project
+        run: |
+          godot --headless --editor --path . --quit
+          godot --headless --path . --export-release "iOS" build/ios
+      - name: Upload Xcode project artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Leonida-iOS-Xcode-project
+          path: build/ios
