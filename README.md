@@ -8,18 +8,9 @@ An open-source, original South-Florida-inspired city prototype targeting Apple S
 - **Sandbox Mode:** free roam with no active mission objectives.
 - The mode-selection menu appears when the prototype starts. Missions currently use simple reach-the-location objectives; this is a prototype, not a complete narrative campaign.
 
-## Build 0.2 — Open World Update (browser prototype)
+## Native iPad project
 
-- Wanted level with police pursuit agents that chase and can gradually disengage when wanted pressure falls.
-- In-game clock with a visual day/night tint; existing weather cycle remains available.
-- GPS toggle and a route guidance line to the current story destination.
-- Garage menu with cash purchases for upgrade progression and vehicle reset/repair.
-- Safehouse purchase ($500) and checkpoint saving.
-- Settings overlay with performance/quality preset toggles, GPS, night and weather controls. Presets are UI-level placeholders; render optimization still needs implementation.
-- HUD wanted stars and clock, with buttons for GPS, Garage, Settings and Safehouse.
-
-These systems are currently implemented in the browser prototype only and are not yet mirrored in the Godot 3D project.
-
+The repository now focuses on the Godot native 3D prototype only. The separate browser game has been removed. The 3D project is still a prototype and has not yet been built or tested on iPad.
 
 ## Build 0.1 enhancement pass
 
@@ -51,11 +42,7 @@ These systems are currently implemented in the browser prototype only and are no
 
 ## Build 0.1 status
 
-**Implemented, but not yet validated in a Godot runtime:** five story objectives and save/reward handling, sprint stamina, vehicle handbrake and reset hotkeys, plus touch brake/reset controls. The browser demo adds five objectives, collectibles, cash rewards, district HUD, simple collision checks, pause/restart/save, and responsive touch controls. Several items remain prototypes or roadmap work; see `TEST_BUILD_0.1.0.md`.
-
-## New: browser test prototype
-
-A separate `index.html` provides a playable original 2D coastal-city demo with Story and Sandbox selection, three checkpoint missions, touch buttons, vehicle mode, moving placeholder traffic and pedestrians, minimap, weather tint, night toggle, and saved mission progress. Open `index.html` in a modern browser to try it. It is an original fan-made prototype and does not include GTA VI assets or game code.
+**Implemented, but not yet validated in a Godot runtime:** five story objectives and save/reward handling, sprint stamina, vehicle handbrake and reset hotkeys, plus touch brake/reset controls. See `TEST_BUILD_0.1.0.md` for limitations.
 
 ## How to test
 
