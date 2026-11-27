@@ -36,7 +36,7 @@ func _ready() -> void:
 	create_hud()
 
 func configure_inputs() -> void:
-	var actions := {"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D, "sprint": KEY_SHIFT, "jump": KEY_SPACE, "interact": KEY_E, "toggle_night": KEY_N, "toggle_weather": KEY_V}
+	var actions := {"move_forward": KEY_W, "move_back": KEY_S, "move_left": KEY_A, "move_right": KEY_D, "sprint": KEY_SHIFT, "jump": KEY_SPACE, "interact": KEY_E, "toggle_night": KEY_N, "toggle_weather": KEY_V, "handbrake": KEY_H, "reset_vehicle": KEY_R}
 	for action in actions:
 		if not InputMap.has_action(action):
 			InputMap.add_action(action)
@@ -323,6 +323,18 @@ func create_touch_controls(layer: CanvasLayer) -> void:
 	interact_button.action="interact"
 	layer.add_child(interact_button)
 	add_touch_label(layer,Vector2(1150,520),"E")
+	var brake_button:=TouchScreenButton.new()
+	brake_button.position=Vector2(1040,650)
+	brake_button.texture_normal=make_touch_texture(Color(0.35,0.12,0.12,0.65))
+	brake_button.action="handbrake"
+	layer.add_child(brake_button)
+	add_touch_label(layer,Vector2(1040,650),"BRAKE")
+	var reset_button:=TouchScreenButton.new()
+	reset_button.position=Vector2(1150,570)
+	reset_button.texture_normal=make_touch_texture(Color(0.20,0.25,0.35,0.65))
+	reset_button.action="reset_vehicle"
+	layer.add_child(reset_button)
+	add_touch_label(layer,Vector2(1150,570),"RESET")
 
 func add_touch_label(layer: CanvasLayer, at: Vector2, label_text: String) -> void:
 	var label:=Label.new()
