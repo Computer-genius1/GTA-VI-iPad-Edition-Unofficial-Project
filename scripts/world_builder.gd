@@ -10,6 +10,7 @@ var rng := RandomNumberGenerator.new()
 func _ready() -> void:
 	rng.seed = 6112026
 	build_environment()
+	build_ground()
 	build_coast()
 	build_roads()
 	build_blocks()
@@ -128,3 +129,15 @@ func build_landmarks() -> void:
 	box(self, Vector3(30, 0.4, -115), Vector3(12, 1, 38), Color(0.48,0.39,0.28))
 	for x in [-34, -20, 20, 34, 48, 62]:
 		palm(Vector3(x, 0, -80))
+
+func build_ground() -> void:
+	var ground := StaticBody3D.new()
+	ground.name = "LandCollision"
+	add_child(ground)
+	var shape := BoxShape3D.new()
+	shape.size = Vector3(500, 1, 500)
+	var collision := CollisionShape3D.new()
+	collision.shape = shape
+	collision.position.y = -0.55
+	ground.add_child(collision)
+	box(self, Vector3(0, -0.65, 0), Vector3(500, 0.3, 500), Color(0.28, 0.38, 0.23))
