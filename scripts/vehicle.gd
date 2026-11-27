@@ -40,9 +40,9 @@ func build_car() -> void:
 			rim_node.position=Vector3(x,0.35,z)
 			rim_node.material_override=mat(Color(0.4,0.42,0.44),0.35,0.4)
 			add_child(rim_node)
-		for side in [-0.72,0.72]:
-			add_box(Vector3(0.35,0.18,0.08),Vector3(side,0.45,-2.08),Color(0.98,0.83,0.52))
-			add_box(Vector3(0.35,0.18,0.08),Vector3(side,0.45,2.08),Color(0.78,0.04,0.03))
+	for side in [-0.72,0.72]:
+		add_box(Vector3(0.35,0.18,0.08),Vector3(side,0.45,-2.08),Color(0.98,0.83,0.52))
+		add_box(Vector3(0.35,0.18,0.08),Vector3(side,0.45,2.08),Color(0.78,0.04,0.03))
 
 func add_box(size: Vector3,pos: Vector3,color: Color) -> void:
 	var mesh:=BoxMesh.new()
