@@ -23,6 +23,7 @@ func _ready() -> void:
 	create_city_blocks()
 	create_landmarks()
 	create_road_details()
+	create_district_props()
 	spawn_ambient_traffic()
 	spawn_pedestrians()
 	spawn_player()
@@ -392,3 +393,39 @@ func toggle_weather() -> void:
 			sky_mat.sky_horizon_color=Color(0.42,0.48,0.55) if rain_mode else (Color(0.08,0.11,0.2) if night_mode else Color(0.78,0.84,0.94))
 	if status_label:
 		status_label.text="Cloudy/rain ambience  •  press V" if rain_mode else "Weather cleared  •  press V"
+
+func create_district_props() -> void:
+	# Original gas-station set piece for a future interaction area.
+	box(self,Vector3(145,0.2,142),Vector3(32,0.4,22),Color(0.35,0.37,0.36))
+	box(self,Vector3(145,5.2,142),Vector3(26,0.9,14),Color(0.9,0.83,0.62))
+	for x in [136,154]:
+		for z in [137,147]:
+			box(self,Vector3(x,2.6,z),Vector3(0.7,5.2,0.7),Color(0.72,0.72,0.68))
+	for x in [137,145,153]:
+		box(self,Vector3(x,1.1,151),Vector3(0.8,2.2,1.1),Color(0.88,0.2,0.12))
+	# Industrial warehouse forms with colored loading doors.
+	for x in [-160,-120]:
+		box(self,Vector3(x,5,160),Vector3(30,10,26),Color(0.56,0.58,0.56))
+		box(self,Vector3(x,2.3,146.8),Vector3(5,4.6,0.35),Color(0.22,0.30,0.36))
+		box(self,Vector3(x+8,2.3,146.8),Vector3(5,4.6,0.35),Color(0.22,0.30,0.36))
+	# Neighborhood park block: green lawn, pathway, benches and trees.
+	box(self,Vector3(-150,0.05,80),Vector3(42,0.18,38),Color(0.22,0.42,0.25))
+	box(self,Vector3(-150,0.12,80),Vector3(5,0.24,34),Color(0.72,0.68,0.60))
+	for x in [-166,-154,-142,-130]:
+		create_palm(Vector3(x,0,68))
+		box(self,Vector3(x,0.8,91),Vector3(3.8,0.5,1.0),Color(0.38,0.25,0.16))
+	# Original location markers help orient testers; simple readable signage.
+	add_location_sign(Vector3(80,3,-68),"BEACHFRONT")
+	add_location_sign(Vector3(-95,3,115),"WAREHOUSE DISTRICT")
+	add_location_sign(Vector3(-150,3,55),"CITY PARK")
+
+func add_location_sign(at: Vector3, words: String) -> void:
+	var label:=Label3D.new()
+	label.text=words
+	label.position=at
+	label.font_size=64
+	label.pixel_size=0.01
+	label.modulate=Color(0.96,0.89,0.66)
+	label.outline_size=8
+	label.billboard=BaseMaterial3D.BILLBOARD_ENABLED
+	add_child(label)
